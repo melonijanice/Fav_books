@@ -1,0 +1,25 @@
+#header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(104, 219, 223);
+    font-size: 18px;
+}
+
+hr {
+    height: 5px;
+    border: 1px solid #7a7272;
+    margin: 30px 0px 30px 0px;
+}
+
+.SubContent {
+    padding: 2px;
+    margin: 1px;
+    font-size: 12px;
+}
+
+#container {
+    display: flex;
+    justify-content: space-around;
+}

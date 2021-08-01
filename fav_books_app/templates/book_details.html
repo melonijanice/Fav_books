@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style_book.css' %}">
+</head>
+
+<body>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div id="header">
+        <h4>Welcome, {{User_name}} !</h4>
+        <a href="/logout" type="submit" class="btn">Log Out</a>
+    </div>
+    <hr>
+
+    <form action="/update_delete/{{view_book.id}}" method="post">
+        {% csrf_token %}
+        <div id="container">
+            <div>{% if request.session.user_id == view_book.uploaded_by.id %}
+                <label>Title:</label><input type="text" class="form-control" name="title" placeholder="Title" value="{{view_book.title}}" required="required"> {% else %}
+                <h3>{{view_book.title}}</h3>
+                {% endif %}
+                <p class="SubContent">Added by {{view_book.uploaded_by.first_name}} {{view_book.uploaded_by.last_name}}</p>
+                <p class="SubContent">Added on {{view_book.created_at}}</p>
+                <p class="SubContent">Last updated at {{view_book.updated_at}}</p>
+                {% if request.session.user_id == view_book.uploaded_by.id %}
+                <label class="SubContent">Description:</label><input type="text" class="form-control SubContent" name="description" value="{{view_book.description}}" placeholder="Description" required="required">
+                <button type="submit" name="update_book" class="btn btn-primary btn-sm">Update</button>
+
+                <button type="submit" name="delete_book" class="btn btn-primary btn-sm">Delete</button> {% else %}
+                <p class="SubContent">Description: {{view_book.description}}</p>
+                {% endif %}
+            </div>
+            <div>
+                <p>Users who like this book</p>
+                {% for user in view_book.add_to_fav_by.all %}
+                <li class="SubContent">{{user.first_name}} {{user.last_name}}</li>
+
+                {% endfor %} {% if request.session.user_id != view_book.uploaded_by.id %} {% if logged_user not in view_book.add_to_fav_by.all%}
+
+                <p><a href="/add_to_fav/{{view_book.id}}/1" type="submit">Add to Favorite</a>
+                    <input type="hidden" name="fav_add"> </p>
+                {% else %}
+                <p><a href="/remove_from_fav/{{view_book.id}}" type="submit">Un-Favorite</a> </p>
+                {% endif %} {% endif %}</form>
+    </div>
+    </div>
+</body>
+
+</html>
